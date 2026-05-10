@@ -1,0 +1,95 @@
+/* 1️ Fonts should always be first */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;...&display=swap');
+
+/* 2️ Then Tailwind */
+@import "tailwindcss";
+
+/* 3️ Then our custom theme/colors */
+@theme {
+  --font-sans: "Poppins", sans-serif;
+  --color-primary: #2b85ff;  
+  --color-secondary: #ef863e; 
+   --color-bg: #fdfeff;
+}
+
+/* 4️ Base styles */
+@layer base {
+  body {
+   background-color: var(--color-bg);
+    overflow-x: hidden;
+  }
+}
+
+/* 5️ Utilities */
+/* @utility input-box {
+  @apply w-full text-sm bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none;
+} */
+
+/* @utility btn-primary {
+  @apply w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-700;
+} */
+
+/* //noteCard CSS */
+/* .icon-btn {
+  @apply text-xl text-slate-300 cursor-pointer hover:text-primary;
+} */
+@layer components {
+  .input-box {
+  @apply w-full text-sm bg-transparent border-[1.5px] px-5 py-3 rounded mb-4 outline-none;
+}
+.btn-primary {
+  @apply w-full text-sm bg-primary text-white p-2 rounded my-1 hover:bg-blue-700;
+}
+  .icon-btn {
+    @apply text-xl text-slate-300 cursor-pointer transition-colors duration-200;
+  }
+  .input-label{
+    @apply text-xs text-slate-400;
+  }
+
+}
+
+/* Remove TipTap/ProseMirror focus border */
+.ProseMirror {
+  padding: 0.5rem;
+  min-height: 120px; /* so empty notes don’t collapse */
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Optional: keep a clean look while typing */
+.ProseMirror:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s ease-in-out;
+}
+
+

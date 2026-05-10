@@ -1,0 +1,867 @@
+import React, { useState, useRef, useEffect } from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import ThemeToggle from "./ThemeToggle";
+// import { useTheme } from "../contexts/ThemeContext";
+
+const Navbar = () => {
+  const { user, logout } = useAuth();
+  const [dropDownOpen, setDropDownOpen] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropDownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const initials = user?.username
+    ? user.username.split(" ").map((n) => n[0]).join("").toUpperCase()
+    : "U";
+
+  return (
+   <nav className="fixed top-0 left-0 right-0 
+  bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow
+  flex items-center justify-between 
+  px-6 py-3 shadow-md z-50 
+  transition-colors duration-300">
+    {/* <nav className="flex justify-between p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow"> */}
+
+  {/* Logo */}
+  <Link to={user ? "/dashboard" : "/login"}>
+    <h2 className="text-xl font-medium text-gray-900 dark:text-gray-100 py-2">
+      Notes App
+    </h2>
+  </Link>
+
+  <div className="flex items-center gap-4">
+    {/* Theme Toggle */}
+   <ThemeToggle/>
+
+    {/* If user not logged in */}
+    {!user ? (
+      <Link
+        to="/login"
+        className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        Login
+      </Link>
+    ) : (
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setDropDownOpen(!dropDownOpen)}
+          className="flex items-center gap-2 focus:outline-none"
+        >
+          <div className="w-8 h-8 flex items-center justify-center rounded-full 
+            bg-gray-200 dark:bg-gray-600 
+            text-gray-700 dark:text-white font-semibold"
+          >
+            {initials}
+          </div>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            {user?.username || "User"}
+          </span>
+          <MdKeyboardArrowDown
+            className={`text-gray-600 dark:text-gray-300 text-lg transition-transform duration-200 ${
+              dropDownOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {dropDownOpen && (
+          <div className="absolute right-0 mt-2 w-40 
+            bg-white dark:bg-gray-800 
+            rounded-lg shadow-lg border 
+            border-gray-100 dark:border-gray-700 
+            transition-all animate-fadeIn"
+          >
+            <div className="px-4 py-2 text-sm 
+              text-gray-700 dark:text-gray-200 
+              border-b border-gray-100 dark:border-gray-700">
+              Account
+            </div>
+
+            <Link
+              to="/profile"
+              onClick={() => setDropDownOpen(false)}
+              className="block px-4 py-2 text-sm 
+              text-gray-700 dark:text-gray-200 
+              hover:bg-gray-50 dark:hover:bg-gray-700 
+              transition-colors"
+            >
+              Profile
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-2 text-sm 
+              text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 
+              flex items-center gap-2 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</nav>
+
+  );
+};
+
+export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom';
+import PasswordInput from '../components/PasswordInput';
+import { validateEmail } from '../utils/helper';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import useAuth from '../hooks/useAuth';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
+
+const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+
+    const {login} = useAuth(); //custom hook
+    const navigate = useNavigate(); // hook
+
+    const handleLogin = async(e)=>{
+      e.preventDefault(); //prevent the default behavior of form submission from reloading the page on user reclick
+
+      if (!email) return setError("Please enter the email address.");
+      if (!password) return setError("Please enter the password.");
+      if (!validateEmail(email)) return setError("Please enter a valid email address");
+
+      setError(null);
+      setLoading(true);
+
+      // Login API call
+      try{
+        await login(email, password);
+        navigate('/dashboard');
+      }
+      catch(err){
+      alert(err.response?.data?.message || 'Login failed');
+      }
+      finally {
+          setLoading(false);
+        }
+    }
+
+  return (
+    <>
+      <Navbar />
+
+      {/* Centered container */}
+      <div className="flex justify-center items-center min-h-screen">
+
+      {/* <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4"> */}
+{/* <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 flex justify-center items-center"> */}
+        <div className="w-full max-w-sm p-5 sm:p-6 md:p-8 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
+          <form onSubmit={handleLogin} className="space-y-5">
+            <h5 className="text-2xl font-semibold text-gray-900 dark:text-white text-center">
+              Log in to your account
+            </h5>
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                           dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              {/* <label
+                htmlFor="password"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Your password
+              </label> */}
+              <PasswordInput
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            </div>
+
+            {/* Remember me + Forgot Password */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  className="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 
+                             focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 
+                             dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                  required
+                />
+                <label
+                  htmlFor="remember"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Remember me
+                </label>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenModal(true)}
+                className="text-sm text-blue-700 hover:underline dark:text-blue-500"
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full text-white bg-blue-700 hover:bg-blue-800 
+                         focus:ring-4 focus:outline-none focus:ring-blue-300 
+                         font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                         dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+                         transition duration-200 ease-in-out"
+            >
+              {loading ? "Logging in..." : "Login to your account"}
+            </button>
+
+            {/* Register link */}
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-300 text-center">
+              Not registered?{" "}
+              <Link to="/signup" className="text-blue-700 hover:underline dark:text-blue-500">
+                Create account
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal open={openModal} onClose={() => setOpenModal(false)} />
+    </>
+  )
+
+}
+export default Login
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { validateEmail } from '../utils/helper';
+import PasswordInput from '../components/PasswordInput';
+import Navbar from '../components/Navbar';
+import useAuth from '../hooks/useAuth';
+
+const Signup = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    if (!username) return setError("Please enter your name");
+    if (!email) return setError("Please enter your email");
+    if (!password) return setError("Please enter your password");
+    if (!validateEmail(email)) return setError("Please enter a valid email address");
+
+    setError(null);
+    setLoading(true);
+
+    try {
+      await register(username, email, password);
+      navigate('/dashboard');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+     <div className="flex justify-center items-center min-h-screen">
+
+        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl shadow-xl sm:p-6 p-5 dark:bg-gray-800 dark:border-gray-700">
+          <form onSubmit={handleSignUp} className="space-y-3">
+            <h5 className="text-2xl font-semibold text-center text-gray-900 dark:text-white mb-4">
+              Create Account
+            </h5>
+
+            {/* Username */}
+            <div>
+              <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                           dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                // autoComplete="username"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                           dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                // autoComplete="email"
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <PasswordInput
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                // autoComplete="new-password"
+              />
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            </div>
+
+            {/* Remember Me */}
+            <div className="flex items-center gap-2">
+              <input
+                id="remember"
+                type="checkbox"
+                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 
+                           focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 
+                           dark:border-gray-600 dark:focus:ring-blue-500"
+                required
+              />
+              <label htmlFor="remember" className="text-sm text-gray-700 dark:text-gray-300">
+                Remember me
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full text-white bg-blue-700 hover:bg-blue-800 
+                         focus:ring-4 focus:outline-none focus:ring-blue-300 
+                         font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                         dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+                         transition duration-200 ease-in-out"
+            >
+              {loading ? 'Signing up...' : 'Sign up'}
+            </button>
+
+            {/* Redirect */}
+            <div className="text-center text-sm text-gray-500 dark:text-gray-300 mt-2">
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-600 hover:underline dark:text-blue-400">
+                Login
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Signup;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import ForgotPasswordModal from "./components/ForgotPasswordModal";
+import ResetPassword from "./pages/ResetPassword";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import Layout from "./components/Layout";
+import "./index.css";
+
+const App = () => {
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <Routes>
+        {/* ✅ Shared layout for protected routes */}
+        <Route path="/" element={<Layout />}>
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoutes>
+                <Home />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoutes>
+                <Profile />
+              </ProtectedRoutes>
+            }
+          />
+        </Route>
+
+        {/* ✅ Public routes */}
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPasswordModal />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+// src/main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import { NotesProvider } from "./contexts/NotesContext";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext"; // our provider
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>          {/* <-- MUST wrap App */}
+        <AuthProvider>
+          <NotesProvider>
+            <App />
+          </NotesProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+
+
+
+
+// import React from "react";
+// import ReactDOM from "react-dom/client";
+// import App from "./App";
+// import { AuthProvider } from "./contexts/AuthContext";
+// import { NotesProvider } from "./contexts/NotesContext";
+// import { BrowserRouter } from "react-router-dom";
+// import "./index.css"; 
+// import { ThemeProvider } from "./contexts/ThemeContext";
+
+
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <React.StrictMode>
+//     <BrowserRouter>
+//       <AuthProvider>
+//         <NotesProvider>
+//           <ThemeProvider>
+//             <App />
+//           </ThemeProvider>
+//         </NotesProvider>
+//       </AuthProvider>
+//     </BrowserRouter>
+//   </React.StrictMode>
+// );
+
+// { "email":"samina@example.com", "password":"Password123!" }
+
+
+
+
+
+
+import React, { useState, useEffect, useRef } from "react";
+import {
+  FiEdit,
+  FiSave,
+  FiCamera,
+  FiUser,
+  FiMail,
+  FiGlobe,
+  FiClock,
+  FiLinkedin,
+  FiGithub,
+  FiTrash2,
+} from "react-icons/fi";
+import Navbar from "../components/Navbar";
+import useAuth from "../hooks/useAuth";
+
+export default function Profile() {
+  const { user } = useAuth();
+
+  const [profilePic, setProfilePic] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    gender: "",
+    country: "Pakistan",
+    language: "English",
+    timezone: "Asia/Karachi",
+    linkedin: "",
+    github: "",
+  });
+
+  // Load saved data
+  useEffect(() => {
+    const savedData = localStorage.getItem("profileData");
+    const savedPic = localStorage.getItem("profilePic");
+    if (savedData) setFormData(JSON.parse(savedData));
+    if (savedPic) setProfilePic(savedPic);
+  }, []);
+
+  // Click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleProfilePic = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setProfilePic(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePic = () => {
+    setProfilePic(null);
+    localStorage.removeItem("profilePic");
+    setShowMenu(false);
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    localStorage.setItem("profileData", JSON.stringify(formData));
+    localStorage.setItem("profilePic", profilePic);
+    setIsEditing(false);
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen pt-24 bg-gray-50 dark:bg-gray-900 flex justify-center items-center px-4 transition-colors duration-300">
+        <div className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8 sm:p-10 transition-all duration-300">
+
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                Profile Settings
+              </h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Manage your profile and personal details
+              </p>
+            </div>
+
+            <button
+              onClick={isEditing ? handleSave : () => setIsEditing(true)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium shadow-md transition-all duration-300 ${
+                isEditing
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-indigo-600 hover:bg-indigo-700 text-white"
+              }`}
+            >
+              {isEditing ? <FiSave /> : <FiEdit />}
+              {isEditing ? "Save" : "Edit"}
+            </button>
+          </div>
+
+          {/* Profile Picture + Info Section */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-gray-200 dark:border-gray-700 pb-6 mb-8">
+            <div className="relative">
+              <img
+                src={
+                  profilePic ||
+                  "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                }
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+              />
+
+              {/* Icons */}
+              <div className="absolute bottom-1 right-1 flex gap-2">
+                <label
+                  htmlFor="file-input"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full cursor-pointer shadow-md transition"
+                >
+                  <FiCamera size={14} />
+                </label>
+                {profilePic && (
+                  <button
+                    onClick={handleRemovePic}
+                    className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-md transition"
+                  >
+                    <FiTrash2 size={14} />
+                  </button>
+                )}
+                <input
+                  id="file-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePic}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            <div className="text-center sm:text-left">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2 justify-center sm:justify-start">
+                <FiUser /> {user?.username}
+              </h2>
+              <p className="text-gray-500 text-sm dark:text-gray-400 flex items-center gap-2 justify-center sm:justify-start">
+                <FiMail /> {user?.email}
+              </p>
+            </div>
+          </div>
+
+          {/* Form Section */}
+          <form className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FormInput
+              label="Gender"
+              name="gender"
+              type="select"
+              value={formData.gender}
+              onChange={handleChange}
+              disabled={!isEditing}
+              options={["Female", "Male", "Other"]}
+              icon={<FiUser />}
+            />
+
+            <FormInput
+              label="Country"
+              name="country"
+              type="text"
+              value={formData.country}
+              onChange={handleChange}
+              disabled={!isEditing}
+              icon={<FiGlobe />}
+            />
+
+            <FormInput
+              label="Language"
+              name="language"
+              type="text"
+              value={formData.language}
+              onChange={handleChange}
+              disabled={!isEditing}
+              icon={<FiGlobe />}
+            />
+
+            <FormInput
+              label="Time Zone"
+              name="timezone"
+              type="text"
+              value={formData.timezone}
+              onChange={handleChange}
+              disabled={!isEditing}
+              icon={<FiClock />}
+            />
+
+            <FormInput
+              label="LinkedIn"
+              name="linkedin"
+              type="url"
+              value={formData.linkedin}
+              onChange={handleChange}
+              disabled={!isEditing}
+              placeholder="https://linkedin.com/in/username"
+              icon={<FiLinkedin />}
+            />
+
+            <FormInput
+              label="GitHub"
+              name="github"
+              type="url"
+              value={formData.github}
+              onChange={handleChange}
+              disabled={!isEditing}
+              placeholder="https://github.com/username"
+              icon={<FiGithub />}
+            />
+          </form>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* Reusable Input Component */
+const FormInput = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
+  disabled,
+  icon,
+  options = [],
+  placeholder,
+}) => (
+  <div className="flex flex-col">
+    <label className="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
+      {label}
+    </label>
+    <div
+      className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm shadow-sm ${
+        disabled
+          ? "bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed border-gray-300 dark:border-gray-600"
+          : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-indigo-500"
+      } transition`}
+    >
+      <span className="text-gray-500">{icon}</span>
+      {type === "select" ? (
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          className="w-full bg-transparent border-none focus:outline-none"
+        >
+          <option value="">Select gender</option>
+          {options.map((opt) => (
+            <option key={opt}>{opt}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          disabled={disabled}
+          className="w-full bg-transparent border-none focus:outline-none"
+        />
+      )}
+    </div>
+  </div>
+);
