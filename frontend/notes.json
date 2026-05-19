@@ -1,0 +1,43 @@
+[
+  {
+    "title": "Daily Gratitude",
+    "content": "Be grateful for small wins. Today's gratitude: health, family, and growth.",
+    "pinned": false,
+    "tags": ["mindfulness", "positive"]
+  },
+  {
+    "title": "Career Goals 2025",
+    "content": "1. Secure a data science or ML internship.\n2. Build 2 strong portfolio projects.\n3. Improve DSA & system design.\n4. Strengthen communication skills.",
+    "pinned": true,
+    "tags": ["career", "goals", "priority"]
+  },
+  {
+    "title": "HCI Notes",
+    "content": "User-centered design focuses on user needs. Key principles: learnability, efficiency, memorability, errors, satisfaction.",
+    "pinned": false,
+    "tags": ["HCI", "study"]
+  },
+  {
+    "title": "Haaribot FYP Tasks",
+    "content": "Complete assumptions section, finalize navigation logic, prepare block diagrams, integrate camera model on GPU PC.",
+    "pinned": true,
+    "tags": ["FYP", "robotics", "priority"]
+  },
+  {
+    "title": "Entrepreneurship Ideas",
+    "content": "1. Karachi carpooling app.\n2. Women fitness awareness platform.\n3. Document duplicate-checking tool.\n4. Agricultural smart robot extensions.",
+    "pinned": false,
+    "tags": ["entrepreneurship", "ideas"]
+  },
+  {
+    "title": "Health Reminder",
+    "content": "Take Nexum & vitamin D as prescribed. Avoid heavy meals at night. At least 20 minutes walk daily.",
+    "pinned": false,
+    "tags": ["health", "medical"]
+  }
+
+]
+
+
+
+

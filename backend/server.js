@@ -43,7 +43,13 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  }),
+);
+// app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(compression());
 
 // Adds a unique ID to each request for traceable logging

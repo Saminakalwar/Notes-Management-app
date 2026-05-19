@@ -35,7 +35,7 @@ exports.createNote = async (req, res, next) => {
 
     logger.info(
       { reqId, note: note._id, user: user._id, title: note.title },
-      "Note created"
+      "Note created",
     );
     res
       .status(201)
@@ -58,7 +58,7 @@ exports.getNotes = async (req, res, next) => {
 
     logger.info(
       { reqId, user: user._id, count: notes.length },
-      "Notes retrieved"
+      "Notes retrieved",
     );
     res.json({
       error: false,
@@ -118,13 +118,13 @@ exports.updateNote = async (req, res, next) => {
     const note = await Note.findOneAndUpdate(
       { _id: req.params.id, user: user._id },
       { $set: updateFields },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!note) {
       logger.warn(
         { reqId, noteId: req.params.id },
-        "Note not found for update"
+        "Note not found for update",
       );
       return res.status(404).json({ error: true, message: "Note not found" });
     }
@@ -153,14 +153,14 @@ exports.deleteNote = async (req, res, next) => {
     if (!note) {
       logger.warn(
         { reqId, noteId, user: user._id },
-        "Note not found for deletion"
+        "Note not found for deletion",
       );
       return res.status(404).json({ error: true, message: "Note not found" });
     }
 
     logger.info(
       { reqId, noteId: note._id, title: note.title, user: user._id },
-      "Note deleted"
+      "Note deleted",
     );
     res.json({ error: false, message: "Note deleted successfully" });
   } catch (err) {
@@ -196,7 +196,7 @@ exports.searchNotes = async (req, res, next) => {
 
     logger.info(
       { reqId, user: user._id, query, results: matchingNotes.length },
-      "Notes search Successful"
+      "Notes search Successful",
     );
 
     return res.json({
@@ -207,7 +207,7 @@ exports.searchNotes = async (req, res, next) => {
   } catch (err) {
     logger.error(
       { reqId, user: user?._id, error: err.message },
-      "Error in Search Notes"
+      "Error in Search Notes",
     );
     next(err);
   }
@@ -222,7 +222,7 @@ exports.togglePin = async (req, res, next) => {
     if (!note) {
       logger.warn(
         { reqId, noteId: req.params.id },
-        "Pin toggle failed: Note not found"
+        "Pin toggle failed: Note not found",
       );
       return res.status(404).json({ error: true, message: "Note not found" });
     }
@@ -275,7 +275,7 @@ exports.importNotes = async (req, res, next) => {
           pinned: note.pinned || false,
           tags: note.tags || [],
         });
-      })
+      }),
     );
 
     res.json({

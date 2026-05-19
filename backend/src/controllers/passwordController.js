@@ -32,7 +32,7 @@ exports.forgotPassword = async (req, res) => {
     if (!user) {
       logger.warn(
         { reqId, email },
-        "Password reset requested for non-existing account"
+        "Password reset requested for non-existing account",
       );
 
       return res.status(200).json({
@@ -81,7 +81,8 @@ exports.forgotPassword = async (req, res) => {
       },
     });
 
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    // const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
     const mailOptions = {
       from: `"Notes App Support" <${process.env.EMAIL_USER}>`,
@@ -111,7 +112,7 @@ exports.forgotPassword = async (req, res) => {
           error: mailErr.message,
           stack: mailErr.stack,
         },
-        "Failed to send reset email"
+        "Failed to send reset email",
       );
     }
 
@@ -154,7 +155,7 @@ exports.resetPassword = async (req, res) => {
     } catch (verifyErr) {
       logger.warn(
         { reqId, error: verifyErr.message },
-        "Token verification failed"
+        "Token verification failed",
       );
       return res.status(401).json({ message: "Invalid or expired token" });
     }

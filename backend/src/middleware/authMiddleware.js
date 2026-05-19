@@ -29,7 +29,7 @@ const authMiddleware = async (req, res, next) => {
       //token valid but user not found.
       logger.warn(
         { reqId, userId: decoded.id },
-        "token valid but user not found"
+        "token valid but user not found",
       );
       return res.status(401).json({ message: "Invalid token" });
     }
@@ -40,9 +40,13 @@ const authMiddleware = async (req, res, next) => {
   } catch (err) {
     logger.error(
       { reqId, error: err.message },
-      "Auth Middleware Internal error"
+      "Auth Middleware Internal error",
     );
-    res.status(500).json({ error: true, message: "Authentication Failed" });
+    // res.status(500).json({ error: true, message: "Authentication Failed" });
+    return res.status(401).json({
+      error: true,
+      message: "Invalid or expired token",
+    });
   }
 };
 

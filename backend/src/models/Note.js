@@ -9,7 +9,7 @@ const noteSchema = new Schema(
     pinned: { type: Boolean, default: false },
     tags: { type: [String], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Note = mongoose.model("Note", noteSchema);
