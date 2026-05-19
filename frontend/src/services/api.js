@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
@@ -15,7 +15,7 @@ API.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // 🔹 Handle expired or invalid token responses globally
@@ -23,23 +23,21 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-  localStorage.clear();
-  if (!window.location.pathname.includes("/login")) {
-    window.location.replace("/login");
-  }
-}
+      localStorage.clear();
+      if (!window.location.pathname.includes("/login")) {
+        window.location.replace("/login");
+      }
+    }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default API;
 
-
-
-    // if (error.response?.status === 401) {
-    //   // Token expired or invalid — force logout
-    //   localStorage.removeItem("token");
-    //   localStorage.removeItem("user");
-    //   window.location.href = "/login";
-    // }
+// if (error.response?.status === 401) {
+//   // Token expired or invalid — force logout
+//   localStorage.removeItem("token");
+//   localStorage.removeItem("user");
+//   window.location.href = "/login";
+// }
