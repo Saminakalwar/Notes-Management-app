@@ -79,7 +79,9 @@ app.use((req, res, next) => {
 app.use(expressLogger);
 
 //Routes
-
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/auth", passwordRoutes);
