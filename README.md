@@ -1,65 +1,86 @@
-📝 MERN Notes App
+# 📝 Notes Management App
 
-A full-stack MERN application for creating, editing, searching, and managing notes with user authentication, profile management, and dark/light theme support.
+A full-stack MERN Notes Management application with authentication, profile management, rich note editing, and cloud image uploads.
 
-🚀 Features
+---
 
-🔐 User Authentication (JWT based login/register)
+## 🌐 Live Demo
 
-🧑‍💼 Profile Management
+- Frontend: https://notes-management-app-lime.vercel.app
+- Backend API: https://notes-management-app-production.up.railway.app
 
-Upload, update, and remove profile picture (Cloudinary)
-Update personal details
-Delete account permanently
+---
 
+## 🚀 Features
 
+### 🔐 Authentication
 
-🗒️ Notes CRUD
+- JWT-based login & registration
+- Protected routes
+- Persistent login sessions
+- Auto logout on invalid/expired token
 
-Create, edit, delete, and view notes
-Real-time search with instant filtering
+### 📝 Notes Management
 
+- Create, edit, delete notes
+- Rich text note editor
+- Real-time search & filtering
+- Responsive notes dashboard
 
-🎨 UI / UX
+### 👤 Profile Management
 
-Tailwind CSS with dark/light theme toggle
-Responsive layout with Navbar & Sidebar
-Custom modals for confirmations
+- Update user profile
+- Upload/remove profile picture
+- Cloudinary image storage
+- Permanent account deletion
 
+### 🎨 UI / UX
 
+- Fully responsive design
+- Dark/Light theme support
+- Toast notifications
+- Custom confirmation modals
 
-☁️ Cloud Integration
+### ⚙️ Backend Features
 
-Profile images stored in Cloudinary
+- RESTful API architecture
+- Structured logging with Pino
+- MongoDB + Mongoose integration
+- Express middleware architecture
 
+---
 
+## 🏗️ Tech Stack
 
-⚙️ Backend Logging
+| Layer          | Technology                   |
+| -------------- | ---------------------------- |
+| Frontend       | React.js, Vite, Tailwind CSS |
+| Backend        | Node.js, Express.js          |
+| Database       | MongoDB Atlas                |
+| Authentication | JWT                          |
+| Image Storage  | Cloudinary                   |
+| Deployment     | Vercel, Railway              |
+| Logging        | Pino Logger                  |
 
-Pino logger for structured request tracking
+---
 
+## 📸 Screenshots
 
+### Login Page
 
-🏗️ Tech Stack
-Layer :	Technology
-Frontend :	React.js, Tailwind CSS, Vite
-Backend	: Node.js, Express.js
-Database :	MongoDB (Mongoose)
-Auth :	JWT (JSON Web Tokens)
-Image Uploads :	Cloudinary
-Logging	: Pino Logger
+### Dashboard
 
+### Profile Page
 
+---
 
+## 📂 Project Structure
 
-📂 Project Structure
-mern-notes-app/
+```txt
+notes-management-app/
 │
 ├── backend/
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── notesController.js
-│   │   └── profileController.js
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
@@ -74,23 +95,25 @@ mern-notes-app/
     │   ├── pages/
     │   ├── services/
     │   └── index.jsx
+    │
     ├── public/
-    └── index.css
+    ├── vite.config.js
+    ├── vercel.json
+    └── package.json
+```
 
+## ⚙️ Local Development Setup
 
+1️⃣ Clone Repository
+git clone https://github.com/yourusername/notes-management-app.git
+cd notes-management-app
 
+### 2️⃣Backend Setup
 
-⚙️ Installation & Setup
-1️⃣ Clone the repository
-git clone https://github.com/yourusername/mern-notes-app.git
-cd mern-notes-app
-
-2️⃣ Backend setup
 cd backend
 npm install
 
-
-Create a .env file in /backend:
+### Create .env inside /backend:
 
 PORT=5000
 MONGO_URI=your_mongodb_uri
@@ -98,70 +121,102 @@ JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-
+CLIENT_URL=http://localhost:5173
 
 Run backend:
-
 npm run dev
 
-
-
-3️⃣ Frontend setup
-cd ../frontend
+3️⃣ Frontend Setup
+cd frontend
 npm install
+
+Create .env inside /frontend:
+
+VITE_API_BASE_URL=http://localhost:5000/api
+
+Run frontend:
 npm run dev
 
+### ☁️ Deployment
 
-Access the app:
+Service Platform
+Frontend Vercel
+Backend Railway
+Database MongoDB Atlas
 
-http://localhost:5173/
+### 🚀 Production Deployment
 
+Frontend (Vercel)
+Framework Preset: Vite
+Root Directory: frontend
+Build Command: npm run build
+Output Directory: dist
 
-🧩 Environment Variables
+Backend (Railway)
+Connected GitHub repository
+Auto deploy enabled
+Environment variables configured
 
-Key	Description
-MONGO_URI	MongoDB connection string
-JWT_SECRET	Secret for token signing
-CLOUDINARY_*	Cloudinary credentials for image upload
-PORT	Backend server port
-
-
-
-🧠 Folder Highlights
-
-contexts/ → React Context API for Auth, Notes, and Profile.
-
-services/api.js → Axios instance with auth token interceptor.
-
-components/ → UI elements (Navbar, Modals, SearchBar, etc.)
-
-pages/ → Login, Signup, Dashboard, Profile.
-
-
-
-🧰 Scripts
+Production Environment Variables
+Backend
+MONGO_URI=
+JWT_SECRET=
+CLIENT_URL=https://your-frontend.vercel.app
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
 Frontend
+VITE_API_BASE_URL=https://your-backend.up.railway.app/api
 
-npm run dev       # Start dev server
-npm run build     # Build production app
+### 🔑 Important Configuration
 
+vercel.json
+{
+"rewrites": [
+{
+"source": "/(.*)",
+"destination": "/"
+}
+]
+}
 
-Backend
+### CORS Setup
 
-npm run dev       # Run backend in watch mode
-npm start         # Run backend in production
+const allowedOrigins = [
+"http://localhost:5173",
+process.env.CLIENT_URL,
+];
 
+## 🧠 Developer Notes
 
+Uses React Context API for lightweight global state management
+Axios interceptors automatically attach JWT tokens
+Images optimized client-side before upload
+SPA routing handled using vercel.json
+Structured request logging implemented using Pino
 
-🧑‍💻 Developer Notes
+## ✨ Key Learning Outcomes
 
-Uses React Context API instead of Redux for lightweight state management.
-Backend logs each request via Pino logger with unique request IDs.
-Profile pictures are optimized client-side before upload using browser-image-compression.
+Full-stack MERN deployment
+Cloud hosting with Vercel & Railway
+JWT authentication workflow
+MongoDB Atlas integration
+Environment variable management
+CORS configuration handling
+Monorepo deployment setup
 
+## 🧰 Available Scripts
 
+Frontend
+npm run dev
+npm run build
+npm run preview
 
-🧾 License
+    Backend
+    npm run dev
+    npm start
+
+## 🧾 License
 
 This project is open-source and available under the MIT License.
