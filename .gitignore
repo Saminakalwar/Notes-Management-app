@@ -58,7 +58,7 @@ coverage/
 frontend/dist/
 frontend/newCode.txt
 backend/uploads/
-extra/
+extra
 readme.txt
 
 
