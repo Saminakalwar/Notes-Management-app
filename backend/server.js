@@ -3,6 +3,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
+app.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.url);
+  next();
+});
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
