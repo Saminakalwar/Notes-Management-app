@@ -104,7 +104,9 @@ notes-management-app/
 
 ## ⚙️ Local Development Setup
 
-1️⃣ Clone Repository
+### 1️⃣ Clone Repository
+
+```bash
 git clone https://github.com/yourusername/notes-management-app.git
 cd notes-management-app
 
@@ -139,18 +141,23 @@ npm run dev
 
 ### ☁️ Deployment
 
-Service Platform
-Frontend Vercel
-Backend Railway
-Database MongoDB Atlas
+| Service  | Platform      |
+| -------- | ------------- |
+| Frontend | Vercel        |
+| Backend  | Railway       |
+| Database | MongoDB Atlas |
+
 
 ### 🚀 Production Deployment
 
 Frontend (Vercel)
 Framework Preset: Vite
 Root Directory: frontend
-Build Command: npm run build
-Output Directory: dist
+Build Command:
+npm run build
+
+Output Directory:
+dist
 
 Backend (Railway)
 Connected GitHub repository
@@ -159,6 +166,7 @@ Environment variables configured
 
 Production Environment Variables
 Backend
+
 MONGO_URI=
 JWT_SECRET=
 CLIENT_URL=https://your-frontend.vercel.app
@@ -169,23 +177,24 @@ CLOUDINARY_API_SECRET=
 Frontend
 VITE_API_BASE_URL=https://your-backend.up.railway.app/api
 
-### 🔑 Important Configuration
+
+## 🔑Important Configuration
 
 vercel.json
 {
-"rewrites": [
-{
-"source": "/(.*)",
-"destination": "/"
-}
-]
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
 
 ### CORS Setup
 
 const allowedOrigins = [
-"http://localhost:5173",
-process.env.CLIENT_URL,
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
 ];
 
 ## 🧠 Developer Notes
@@ -220,3 +229,4 @@ npm run preview
 ## 🧾 License
 
 This project is open-source and available under the MIT License.
+```
